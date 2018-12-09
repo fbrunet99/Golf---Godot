@@ -5,13 +5,11 @@ export (PackedScene) var Card
 var deck = []
 var curCard = 0
 
-
 func _ready():
 	randomize()
 	setup_deck()
 	draw_cards()
 	$Foundation.card_number = curCard
-	
 
 func setup_deck() :
 	var i
@@ -23,7 +21,6 @@ func setup_deck() :
 		deck.append(newCard)
 		
 	deck = shuffleList(deck)
-	
 
 func draw_cards() :
 	var i
@@ -36,8 +33,6 @@ func draw_cards() :
 		curCard.global_position = loc
 		add_child(curCard)
 	
-
-
 #func _process(delta):
 #	# Called every frame. Delta is time since last frame.
 #	# Update game logic here.

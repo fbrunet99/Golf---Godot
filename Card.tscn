@@ -8,7 +8,7 @@
 custom_solver_bias = 0.0
 extents = Vector2( 10, 10 )
 
-[node name="Card" type="Area2D"]
+[node name="Card" type="Area2D" index="0"]
 
 position = Vector2( 111.911, 135.18 )
 input_pickable = true
@@ -23,6 +23,7 @@ __meta__ = {
 "_edit_group_": true
 }
 card_number = 0
+suit = "heart"
 
 [node name="CardSprite" type="Sprite" parent="." index="0"]
 
@@ -35,5 +36,7 @@ _sections_unfolded = [ "Transform" ]
 position = Vector2( 0.329817, 1.87371 )
 scale = Vector2( 4.14214, 6.1056 )
 shape = SubResource( 1 )
+
+[connection signal="input_event" from="." to="." method="_on_Card_input_event"]
 
 

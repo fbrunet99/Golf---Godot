@@ -1,5 +1,9 @@
 extends Area2D
 
+signal card_clicked(value)
+export (int) var card_number = 0 setget set_card_number, get_card_number
+export (String) var suit = "heart" setget get_suit
+
 
 var cardNames = [ "back", 
 "club_1", "club_2", "club_3", "club_4", "club_5", "club_6", "club_7", "club_8", "club_9", "club_10", "club_jack", "club_queen", "club_king",
@@ -9,12 +13,10 @@ var cardNames = [ "back",
 	]
 	
 var deck = Array()
-	
-export (int) var card_number = 0 setget set_card_number, get_card_number
-
-# class member variables go here, for example:
-# var a = 2
-# var b = "textvar"
+var cardInfo =  {
+	idx = 0,
+	name =""
+}
 
 func _ready():
 	# Called when the node is added to the scene for the first time.
@@ -42,17 +44,52 @@ func set_card_number(value):
 	if deck.size() == 0 :
 		init_cardImages()
 		
-	var cardNum = value
-	if cardNum > deck.size() :
-		cardNum = cardNum % deck.size()
+	cardInfo.idx = value
+	if cardInfo.idx > deck.size() :
+		cardInfo.idx = cardInfo.idx % deck.size()
+	cardInfo.name = cardNames[cardInfo.idx]	
+	var parts = cardInfo.name.split("_")
+	cardInfo.suit = parts[0]
+	if parts.size() > 1:
+		cardInfo.value = get_face_value(parts[1])
+	
 		
 	var sprite = $CardSprite
 	var cardImage
 	
-	if sprite && deck.size() > cardNum :
-		cardImage = deck[cardNum]
+	if sprite && deck.size() > cardInfo.idx :
+		cardImage = deck[cardInfo.idx]
 		sprite.set_texture(cardImage)
 	
 	
 func get_card_number():
 	return card_number
+
+func get_face_value(value):
+	var ret = int(value)
+	match(value):
+		"king":
+			ret = 12
+		"queen":
+			ret = 11
+		"jack":
+			ret = 10
+		"ace":
+			ret = 1
+	
+	return ret
+
+func get_suit():
+	return cardInfo.suit
+
+func _on_Card_input_event(viewport, event, shape_idx):
+	if event is InputEventMouseButton and event.pressed:
+		print("clicked card" + self.cardInfo.name + " suit=" + cardInfo.suit + " value=" + str(cardInfo.value))
+		emit_signal("card_clicked", cardInfo.value)
+	#if event.type == InputEvent.MOUSE_BUTTON:
+#		and event.button_index == BUTTON_LEFT \
+#		and event.pressed:
+	
+	return(self)
+	
+	
