@@ -26,12 +26,14 @@ card_number = 0
 
 [node name="CardSprite" type="Sprite" parent="." index="0"]
 
+scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 2 )
+_sections_unfolded = [ "Transform" ]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." index="1"]
 
-position = Vector2( -3.6842, -0.476543 )
-scale = Vector2( 5.8811, 9.2052 )
+position = Vector2( 0.329817, 1.87371 )
+scale = Vector2( 4.14214, 6.1056 )
 shape = SubResource( 1 )
 
 
