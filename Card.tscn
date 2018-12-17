@@ -24,6 +24,7 @@ __meta__ = {
 }
 card_number = 0
 suit = "heart"
+value = null
 
 [node name="CardSprite" type="Sprite" parent="." index="0"]
 

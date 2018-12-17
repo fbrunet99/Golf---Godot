@@ -37,7 +37,10 @@ align = 1
 [node name="Foundation" parent="." index="1" instance=ExtResource( 2 )]
 
 position = Vector2( 533.207, 517.208 )
+value = null
 
 [connection signal="pressed" from="NextCard" to="." method="_on_NextCard_pressed"]
+
+[connection signal="card_clicked" from="Foundation" to="." method="_on_Foundation_card_clicked"]
 
 

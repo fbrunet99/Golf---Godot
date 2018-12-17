@@ -3,6 +3,7 @@ extends Area2D
 signal card_clicked(value)
 export (int) var card_number = 0 setget set_card_number, get_card_number
 export (String) var suit = "heart" setget get_suit
+export (int) var value setget get_value
 
 
 var cardNames = [ "back", 
@@ -15,7 +16,9 @@ var cardNames = [ "back",
 var deck = Array()
 var cardInfo =  {
 	idx = 0,
-	name =""
+	name ="",
+	value=0,
+	ref=self
 }
 
 func _ready():
@@ -66,30 +69,33 @@ func get_card_number():
 	return card_number
 
 func get_face_value(value):
+	if (value == null) : 
+		value = 0
 	var ret = int(value)
 	match(value):
 		"king":
-			ret = 12
+			ret = 13
 		"queen":
-			ret = 11
+			ret = 12
 		"jack":
-			ret = 10
+			ret = 11
 		"ace":
 			ret = 1
+		"back":
+			ret = -1
 	
 	return ret
 
 func get_suit():
 	return cardInfo.suit
+	
+func get_value():
+	return cardInfo.value
 
 func _on_Card_input_event(viewport, event, shape_idx):
 	if event is InputEventMouseButton and event.pressed:
 		print("clicked card" + self.cardInfo.name + " suit=" + cardInfo.suit + " value=" + str(cardInfo.value))
-		emit_signal("card_clicked", cardInfo.value)
-	#if event.type == InputEvent.MOUSE_BUTTON:
-#		and event.button_index == BUTTON_LEFT \
-#		and event.pressed:
-	
+		emit_signal("card_clicked", cardInfo)
 	return(self)
 	
 	

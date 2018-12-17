@@ -31,6 +31,8 @@ func draw_cards() :
 		var curCard = deck[i]
 		var loc = Vector2(x, y)
 		curCard.global_position = loc
+		
+		curCard.connect("card_clicked", self, "_on_Playfield_card_clicked")
 		add_child(curCard)
 	
 #func _process(delta):
@@ -56,3 +58,35 @@ func shuffleList(list):
 		list.remove(x)
 	return shuffledList
 
+
+func isMatch(value1, value2):
+	if ((value1 == 1 && value2 == 13) || (value1 == 13 && value2 == 1)):
+		return true
+	
+	var diff = value1 - value2
+	var ret = false
+	match diff:
+		-1:
+			ret = true
+		1: 
+			ret = true
+	return ret
+	
+func remove_card(cardInfo):
+	$Foundation.card_number = cardInfo.idx
+	remove_child(cardInfo.ref)
+
+func _on_Playfield_card_clicked(cardInfo):
+	var value = cardInfo.value
+	print("on_playfield_card_clicked" + str(value))
+	var value2 = $Foundation.cardInfo.value
+	if isMatch(value, value2):
+		print(str(value) + " and " + str(value2) + " match")
+		remove_card(cardInfo)
+	else:
+		print(str(value) + " and " + str(value2) + " don't match")
+	
+
+func _on_Foundation_card_clicked(value):
+	print("on_Foundation_card_clicked value= " + str(value))
+	pass # replace with function body
