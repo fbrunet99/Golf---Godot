@@ -27,20 +27,19 @@ func _ready():
 	# init_cardImages()
 	pass
 
+func _init():
+	pass
+
 func init_cardImages():
 	var i
 	var cardImage
 	
 	for i in range(0, cardNames.size()):
 		cardImage = ImageTexture.new()
-		print(cardNames[i])
 		cardImage.load("res://assets/1x/" + cardNames[i] + ".png")
 		deck.append(cardImage)
 	
 	
-	print (cardNames.size())
-	print (deck.size())
-		
 
 func set_card_number(value):
 	
@@ -56,6 +55,7 @@ func set_card_number(value):
 	if parts.size() > 1:
 		cardInfo.value = get_face_value(parts[1])
 	
+	var cardValue = cardInfo.value
 		
 	var sprite = $CardSprite
 	var cardImage
@@ -90,6 +90,7 @@ func get_suit():
 	return cardInfo.suit
 	
 func get_value():
+	var cardValue = cardInfo.value
 	return cardInfo.value
 
 func _on_Card_input_event(viewport, event, shape_idx):

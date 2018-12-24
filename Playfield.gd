@@ -2,32 +2,39 @@ extends Node
 
 export (PackedScene) var Card
 
-var deck = []
-var foundations = [ 100, 200, 300, 400, 500, 600, 700 ]
-var CurCard = 0
+var _deck = []
+var _tableau = [ 100, 200, 300, 400, 500, 600, 700 ]
+var _cur_card = 0
 
 func _ready():
 	randomize()
 	setup_deck()
 	draw_cards()
-	$Stock.card_number = CurCard
-	print("stock card number = " + str($Stock.card_number))
+	
+	print("b Foundation card number = " + str($Foundation.card_number) + 
+			"  value=" + str($Foundation.cardInfo.value))
+				
+	$Foundation.card_number = _deck[_cur_card].cardInfo.idx
+	var myCard = $Foundation
+	print("a Foundation card number = " + str($Foundation.card_number) + 
+			"  value=" + str($Foundation.cardInfo.value))
 
 func setup_deck() :
 	var i
 	var cdx
 	for i in range(1, 52) :
 		cdx = i
-		var newCard = Card.instance()
+		var newCard = Card.instance(cdx)
 		newCard.card_number = cdx
-		deck.append(newCard)
-		
-	deck = shuffleList(deck)
+		_deck.append(newCard)
+	
+	_deck = shuffleList(_deck)
+	
 
 func draw_cards() :
 	var i
 	var j = 0
-	var y = 100
+	var y = 130
 	var x
 	
 	for i in range(1, 36 ) :
@@ -35,12 +42,11 @@ func draw_cards() :
 			y += 30
 			j = 0
 
-		x = foundations[j]
+		x = _tableau[j]
 		j += 1
-		CurCard += 1
+		_cur_card += 1
 
-	
-		var nextCard = deck[i]
+		var nextCard = _deck[i]
 		var loc = Vector2(x, y)
 		nextCard.global_position = loc
 		
@@ -55,16 +61,7 @@ func draw_cards() :
 #	pass
 
 func _on_NextCard_pressed():
-	CurCard += 1
-	if CurCard > 51 :
-		CurCard = 51
-	
-	
-	var nextCard = deck[CurCard]
-	var cardNum = nextCard.card_number
-	
-	$Stock.card_number = cardNum
-	print("cur card = " + str(cardNum))
+	pass
 
 # Shuffle array
 func shuffleList(list):
@@ -92,13 +89,13 @@ func isMatch(value1, value2):
 	return ret
 	
 func remove_card(cardInfo):
-	$Stock.card_number = cardInfo.idx
+	$Foundation.card_number = cardInfo.idx
 	remove_child(cardInfo.ref)
 
 func _on_Playfield_card_clicked(cardInfo):
 	var value = cardInfo.value
 	print("on_playfield_card_clicked" + str(value))
-	var value2 = $Stock.cardInfo.value
+	var value2 = $Foundation.cardInfo.value
 	if isMatch(value, value2):
 		print(str(value) + " and " + str(value2) + " match")
 		remove_card(cardInfo)
@@ -106,6 +103,18 @@ func _on_Playfield_card_clicked(cardInfo):
 		print(str(value) + " and " + str(value2) + " don't match")
 	
 
+func _on_Foundation_card_clicked(value):
+	print("on_Foundation_card_clicked value= " + str(value))
+	pass # replace with function body
+
 func _on_Stock_card_clicked(value):
 	print("on_Stock_card_clicked value= " + str(value))
-	pass # replace with function body
+	_cur_card += 1
+	if _cur_card > 51 :
+		_cur_card = 51
+	
+	var nextCard = _deck[_cur_card]
+	var cardNum = nextCard.card_number
+	
+	$Foundation.card_number = cardNum
+	print("cur card = " + str(cardNum))
