@@ -3,13 +3,15 @@ extends Node
 export (PackedScene) var Card
 
 var deck = []
-var curCard = 0
+var foundations = [ 100, 200, 300, 400, 500, 600, 700 ]
+var CurCard = 0
 
 func _ready():
 	randomize()
 	setup_deck()
 	draw_cards()
-	$Foundation.card_number = curCard
+	$Stock.card_number = CurCard
+	print("stock card number = " + str($Stock.card_number))
 
 func setup_deck() :
 	var i
@@ -24,16 +26,28 @@ func setup_deck() :
 
 func draw_cards() :
 	var i
+	var j = 0
+	var y = 100
+	var x
 	
-	for i in range (1, 10) :
-		var x = i * 100
-		var y = 200
-		var curCard = deck[i]
+	for i in range(1, 36 ) :
+		if j > 6 :
+			y += 30
+			j = 0
+
+		x = foundations[j]
+		j += 1
+		CurCard += 1
+
+	
+		var nextCard = deck[i]
 		var loc = Vector2(x, y)
-		curCard.global_position = loc
+		nextCard.global_position = loc
 		
-		curCard.connect("card_clicked", self, "_on_Playfield_card_clicked")
-		add_child(curCard)
+		nextCard.connect("card_clicked", self, "_on_Playfield_card_clicked")
+		add_child(nextCard)
+		
+
 	
 #func _process(delta):
 #	# Called every frame. Delta is time since last frame.
@@ -41,11 +55,16 @@ func draw_cards() :
 #	pass
 
 func _on_NextCard_pressed():
-	curCard += 1
-	if curCard > 52 :
-		curCard = 0
-	$Foundation.card_number = curCard
-	print("cur card = " + str(curCard))
+	CurCard += 1
+	if CurCard > 51 :
+		CurCard = 51
+	
+	
+	var nextCard = deck[CurCard]
+	var cardNum = nextCard.card_number
+	
+	$Stock.card_number = cardNum
+	print("cur card = " + str(cardNum))
 
 # Shuffle array
 func shuffleList(list):
@@ -73,13 +92,13 @@ func isMatch(value1, value2):
 	return ret
 	
 func remove_card(cardInfo):
-	$Foundation.card_number = cardInfo.idx
+	$Stock.card_number = cardInfo.idx
 	remove_child(cardInfo.ref)
 
 func _on_Playfield_card_clicked(cardInfo):
 	var value = cardInfo.value
 	print("on_playfield_card_clicked" + str(value))
-	var value2 = $Foundation.cardInfo.value
+	var value2 = $Stock.cardInfo.value
 	if isMatch(value, value2):
 		print(str(value) + " and " + str(value2) + " match")
 		remove_card(cardInfo)
@@ -87,6 +106,6 @@ func _on_Playfield_card_clicked(cardInfo):
 		print(str(value) + " and " + str(value2) + " don't match")
 	
 
-func _on_Foundation_card_clicked(value):
-	print("on_Foundation_card_clicked value= " + str(value))
+func _on_Stock_card_clicked(value):
+	print("on_Stock_card_clicked value= " + str(value))
 	pass # replace with function body

@@ -3,7 +3,7 @@
 [ext_resource path="res://Playfield.gd" type="Script" id=1]
 [ext_resource path="res://Card.tscn" type="PackedScene" id=2]
 
-[node name="Playfield" type="Node"]
+[node name="Playfield" type="Node" index="0"]
 
 script = ExtResource( 1 )
 _sections_unfolded = [ "Pause" ]
@@ -34,12 +34,12 @@ text = "Next"
 flat = false
 align = 1
 
-[node name="Foundation" parent="." index="1" instance=ExtResource( 2 )]
+[node name="Stock" parent="." index="1" instance=ExtResource( 2 )]
 
 position = Vector2( 533.207, 517.208 )
 
 [connection signal="pressed" from="NextCard" to="." method="_on_NextCard_pressed"]
 
-[connection signal="card_clicked" from="Foundation" to="." method="_on_Foundation_card_clicked"]
+[connection signal="card_clicked" from="Stock" to="." method="_on_Foundation_card_clicked"]
 
 

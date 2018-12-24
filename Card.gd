@@ -66,7 +66,7 @@ func set_card_number(value):
 	
 	
 func get_card_number():
-	return card_number
+	return cardInfo.idx
 
 func get_face_value(value):
 	if (value == null) : 
