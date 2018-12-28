@@ -114,6 +114,6 @@ func _on_Card_input_event(viewport, event, shape_idx):
 
 func _on_Tween_tween_completed(object, key):
 	print("Removing self")
-	get_parent().remove_child(self)
+#	get_parent().remove_child(self)
 	emit_signal("card_removed", self)
 

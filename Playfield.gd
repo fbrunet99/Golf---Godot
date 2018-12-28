@@ -96,7 +96,7 @@ func remove_card(cardInfo):
 	var tween = obj.get_child(2)
 	
 	tween.interpolate_property(obj, "position",
-                source, target, 1,
+                source, target, 0.2,
                 Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
 	tween.start()
 
