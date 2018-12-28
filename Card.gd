@@ -1,6 +1,7 @@
 extends Area2D
 
 signal card_clicked(value)
+signal card_removed(value)
 export (int) var card_number = 0 setget set_card_number, get_card_number
 export (String) var suit = "heart" setget get_suit
 export (int) var value setget get_value
@@ -25,6 +26,15 @@ func _ready():
 	# Called when the node is added to the scene for the first time.
 	# Initialization here
 	# init_cardImages()
+	pass
+
+func move(target):
+	pass
+	
+
+
+func _process():
+	print("process")
 	pass
 
 func _init():
@@ -100,3 +110,10 @@ func _on_Card_input_event(viewport, event, shape_idx):
 	return(self)
 	
 	
+
+
+func _on_Tween_tween_completed(object, key):
+	print("Removing self")
+	get_parent().remove_child(self)
+	emit_signal("card_removed", self)
+

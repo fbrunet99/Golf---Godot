@@ -50,7 +50,8 @@ func draw_cards() :
 		var loc = Vector2(x, y)
 		nextCard.global_position = loc
 		
-		nextCard.connect("card_clicked", self, "_on_Playfield_card_clicked")
+		nextCard.connect("card_clicked", self, "_on_Tableau_card_clicked")
+		nextCard.connect("card_removed", self, "_on_Tableau_card_removed")
 		add_child(nextCard)
 		
 
@@ -89,10 +90,19 @@ func isMatch(value1, value2):
 	return ret
 	
 func remove_card(cardInfo):
-	$Foundation.card_number = cardInfo.idx
-	remove_child(cardInfo.ref)
+	var obj = cardInfo.ref
+	var source = obj.global_position
+	var target = $Foundation.global_position
+	var tween = obj.get_child(2)
+	
+	tween.interpolate_property(obj, "position",
+                source, target, 1,
+                Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	tween.start()
 
-func _on_Playfield_card_clicked(cardInfo):
+#	remove_child(cardInfo.ref)
+
+func _on_Tableau_card_clicked(cardInfo):
 	var value = cardInfo.value
 	print("on_playfield_card_clicked" + str(value))
 	var value2 = $Foundation.cardInfo.value
@@ -102,6 +112,11 @@ func _on_Playfield_card_clicked(cardInfo):
 	else:
 		print(str(value) + " and " + str(value2) + " don't match")
 	
+func _on_Tableau_card_removed(obj):
+	print("on_tableau_card_removed")
+	var cardInfo = obj.cardInfo
+	$Foundation.card_number = cardInfo.idx
+	remove_child(obj)
 
 func _on_Foundation_card_clicked(value):
 	print("on_Foundation_card_clicked value= " + str(value))

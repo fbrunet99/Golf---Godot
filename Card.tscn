@@ -38,6 +38,18 @@ position = Vector2( 0.329817, 1.87371 )
 scale = Vector2( 4.14214, 6.1056 )
 shape = SubResource( 1 )
 
+[node name="Tween" type="Tween" parent="." index="2"]
+
+repeat = false
+playback_process_mode = 1
+playback_speed = 1.0
+playback/active = false
+playback/repeat = false
+playback/speed = 1.0
+_sections_unfolded = [ "playback" ]
+
 [connection signal="input_event" from="." to="." method="_on_Card_input_event"]
+
+[connection signal="tween_completed" from="Tween" to="." method="_on_Tween_tween_completed"]
 
 
