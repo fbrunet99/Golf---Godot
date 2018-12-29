@@ -9,27 +9,26 @@ var _cur_card = 0
 func _ready():
 	randomize()
 	setup_deck()
-	draw_cards()
-	
-	print("b Foundation card number = " + str($Foundation.card_number) + 
-			"  value=" + str($Foundation.cardInfo.value))
-				
-	$Foundation.card_number = _deck[_cur_card].cardInfo.idx
-	var myCard = $Foundation
-	print("a Foundation card number = " + str($Foundation.card_number) + 
-			"  value=" + str($Foundation.cardInfo.value))
+	start_game()
+
 
 func setup_deck() :
 	var i
 	var cdx
+	
 	for i in range(1, 52) :
 		cdx = i
 		var newCard = Card.instance(cdx)
 		newCard.card_number = cdx
 		_deck.append(newCard)
-	
+
+
+# Start a new game
+func start_game() :
+	_cur_card = 0
 	_deck = shuffleList(_deck)
-	
+	draw_cards()
+	$Foundation.card_number = _deck[_cur_card].cardInfo.idx
 
 func draw_cards() :
 	var i
@@ -49,6 +48,7 @@ func draw_cards() :
 		var nextCard = _deck[i]
 		var loc = Vector2(x, y)
 		nextCard.global_position = loc
+		nextCard.z_index = i
 		
 		nextCard.connect("card_clicked", self, "_on_Tableau_card_clicked")
 		nextCard.connect("card_removed", self, "_on_Tableau_card_removed")
@@ -61,7 +61,8 @@ func draw_cards() :
 #	# Update game logic here.
 #	pass
 
-func _on_NextCard_pressed():
+func _on_NewGame_pressed():
+	start_game()
 	pass
 
 # Shuffle array

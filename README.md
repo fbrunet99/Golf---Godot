@@ -22,3 +22,15 @@ Click this to get a new foundation card
 
 ### Foundation
 This is the card that you are trying to match one higher or lower.
+
+
+## To Do
+
+### Essential
+* Detect empty stock (game over)
+* Detect empty tableau (win)
+* Detect if card has another card on top when clicking
+* Game over page
+* Show score
+* Show remaining card count
+* When last card, make stock go away
