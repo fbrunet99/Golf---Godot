@@ -5,6 +5,8 @@ export (PackedScene) var Card
 var _deck = []
 var _tableau = [ 100, 200, 300, 400, 500, 600, 700 ]
 var _cur_card = 0
+var _stock_remain
+var _tableau_remain
 
 func _ready():
 	randomize()
@@ -16,8 +18,8 @@ func setup_deck() :
 	var i
 	var cdx
 	
-	for i in range(1, 52) :
-		cdx = i
+	for i in range(0, 52) :
+		cdx = 1+i
 		var newCard = Card.instance(cdx)
 		newCard.card_number = cdx
 		_deck.append(newCard)
@@ -25,25 +27,29 @@ func setup_deck() :
 
 # Start a new game
 func start_game() :
-	_cur_card = 0
+	_cur_card = 1
+	_stock_remain = 17
+	_tableau_remain = 35
+	
 	_deck = shuffleList(_deck)
 	draw_cards()
 	$Foundation.card_number = _deck[_cur_card].cardInfo.idx
+	$Stock.card_number = 0
 
 func draw_cards() :
 	var i
 	var j = 0
 	var y = 130
+	var foundationSize = 35
 	var x
 	
-	for i in range(1, 36 ) :
+	for i in range(0, foundationSize ) :
 		if j > 6 :
 			y += 30
 			j = 0
 
 		x = _tableau[j]
 		j += 1
-		_cur_card += 1
 
 		var nextCard = _deck[i]
 		var loc = Vector2(x, y)
@@ -53,7 +59,9 @@ func draw_cards() :
 		nextCard.connect("card_clicked", self, "_on_Tableau_card_clicked")
 		nextCard.connect("card_removed", self, "_on_Tableau_card_removed")
 		add_child(nextCard)
-		
+
+	_cur_card = foundationSize
+	print("cur_card=" + str(_cur_card))
 
 	
 #func _process(delta):
@@ -114,23 +122,31 @@ func _on_Tableau_card_clicked(cardInfo):
 		print(str(value) + " and " + str(value2) + " don't match")
 	
 func _on_Tableau_card_removed(obj):
-	print("on_tableau_card_removed")
 	var cardInfo = obj.cardInfo
+	
+	_tableau_remain -= 1
 	$Foundation.card_number = cardInfo.idx
+	
 	remove_child(obj)
+	print("on_Tableau_card_removed, stock remain = " + str(_stock_remain))
 
 func _on_Foundation_card_clicked(value):
 	print("on_Foundation_card_clicked value= " + str(value))
-	pass # replace with function body
+
+	pass 
 
 func _on_Stock_card_clicked(value):
-	print("on_Stock_card_clicked value= " + str(value))
 	_cur_card += 1
-	if _cur_card > 51 :
-		_cur_card = 51
+	_stock_remain -= 1
+	var cardNum
 	
-	var nextCard = _deck[_cur_card]
-	var cardNum = nextCard.card_number
+	if _stock_remain > 0:
+		var nextCard = _deck[_cur_card]
+		cardNum = nextCard.card_number
+		$Foundation.card_number = cardNum	
+	else:
+		cardNum = -1
+		$Stock.card_number = -1
 	
-	$Foundation.card_number = cardNum
-	print("cur card = " + str(cardNum))
+
+	print("on_Stock_card_clicked value= " + str(value) + " remain=" + str(_stock_remain))

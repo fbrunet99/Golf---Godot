@@ -7,14 +7,16 @@ export (String) var suit = "heart" setget get_suit
 export (int) var value setget get_value
 
 
-var cardNames = [ "back", 
+var _cardNames = [ "back", 
 "club_1", "club_2", "club_3", "club_4", "club_5", "club_6", "club_7", "club_8", "club_9", "club_10", "club_jack", "club_queen", "club_king",
 "diamond_1", "diamond_2", "diamond_3", "diamond_4", "diamond_5", "diamond_6", "diamond_7", "diamond_8", "diamond_9", "diamond_10", "diamond_jack", "diamond_queen", "diamond_king",
 "heart_1", "heart_2", "heart_3", "heart_4", "heart_5", "heart_6", "heart_7", "heart_8", "heart_9", "heart_10", "heart_jack", "heart_queen", "heart_king",
 "spade_1", "spade_2", "spade_3", "spade_4", "spade_5", "spade_6", "spade_7", "spade_8", "spade_9", "spade_10", "spade_jack", "spade_queen", "spade_king"
 	]
 	
-var deck = Array()
+var _deck = Array()
+var _backs = Array()
+
 var cardInfo =  {
 	idx = 0,
 	name ="",
@@ -28,10 +30,6 @@ func _ready():
 	# init_cardImages()
 	pass
 
-func move(target):
-	pass
-	
-
 
 func _process():
 	print("process")
@@ -44,34 +42,49 @@ func init_cardImages():
 	var i
 	var cardImage
 	
-	for i in range(0, cardNames.size()):
+	for i in range(0, _cardNames.size()):
 		cardImage = ImageTexture.new()
-		cardImage.load("res://assets/1x/" + cardNames[i] + ".png")
-		deck.append(cardImage)
-	
-	
+		cardImage.load("res://assets/1x/" + _cardNames[i] + ".png")
+		_deck.append(cardImage)
+		
+	cardImage = ImageTexture.new()
+	cardImage.load("res://assets/1x/back-black.png")
+	_backs.append(cardImage)
+
+
 
 func set_card_number(value):
-	
-	if deck.size() == 0 :
+	if _deck.size() == 0 :
 		init_cardImages()
 		
 	cardInfo.idx = value
-	if cardInfo.idx > deck.size() :
-		cardInfo.idx = cardInfo.idx % deck.size()
-	cardInfo.name = cardNames[cardInfo.idx]	
+	if cardInfo.idx > _deck.size() :
+		cardInfo.idx = cardInfo.idx % _deck.size()
+	
+	if cardInfo.idx >= 0:
+		cardInfo.name = _cardNames[cardInfo.idx]	
+	else: 
+		cardInfo.name = "empty"
+		
 	var parts = cardInfo.name.split("_")
 	cardInfo.suit = parts[0]
 	if parts.size() > 1:
 		cardInfo.value = get_face_value(parts[1])
+	else:
+		cardInfo.value = 0
 	
 	var cardValue = cardInfo.value
 		
 	var sprite = $CardSprite
 	var cardImage
 	
-	if sprite && deck.size() > cardInfo.idx :
-		cardImage = deck[cardInfo.idx]
+	if sprite:
+		if cardInfo.idx > -1:
+			cardImage = _deck[cardInfo.idx]
+		else: 
+			match(cardInfo.idx):
+				-1: cardImage = _backs[0]
+			
 		sprite.set_texture(cardImage)
 	
 	
@@ -109,11 +122,8 @@ func _on_Card_input_event(viewport, event, shape_idx):
 		emit_signal("card_clicked", cardInfo)
 	return(self)
 	
-	
 
 
 func _on_Tween_tween_completed(object, key):
-	print("Removing self")
-#	get_parent().remove_child(self)
 	emit_signal("card_removed", self)
 
