@@ -118,8 +118,29 @@ func get_value():
 
 func _on_Card_input_event(viewport, event, shape_idx):
 	if event is InputEventMouseButton and event.pressed:
+		var onTop = true
+		var others = get_overlapping_areas()
+
+		if others != null && others.size() > 0:
+			onTop = false
+			var i
+			var maxZ = 0
+			for i in range(0, others.size()):
+				var item = others[i]
+				maxZ = max(maxZ, item.z_index)
+				var cardInfo = item.cardInfo
+				if cardInfo != null:
+					print("overlapping value = %s z=%s" %[cardInfo.value, item.z_index])
+				else:
+					print("overlapping item is not a Card")
+			
+			if z_index >= maxZ:	
+				onTop = true
+				
+		
 		print("clicked card" + self.cardInfo.name + " suit=" + cardInfo.suit + " value=" + str(cardInfo.value))
-		emit_signal("card_clicked", cardInfo)
+		if onTop:
+			emit_signal("card_clicked", cardInfo)
 	return(self)
 	
 

@@ -113,7 +113,7 @@ func remove_card(cardInfo):
 
 func _on_Tableau_card_clicked(cardInfo):
 	var value = cardInfo.value
-	print("on_playfield_card_clicked" + str(value))
+
 	var value2 = $Foundation.cardInfo.value
 	if isMatch(value, value2):
 		print(str(value) + " and " + str(value2) + " match")

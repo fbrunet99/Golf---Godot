@@ -8,7 +8,7 @@
 custom_solver_bias = 0.0
 extents = Vector2( 10, 10 )
 
-[node name="Card" type="Area2D"]
+[node name="Card" type="Area2D" index="0"]
 
 position = Vector2( 111.911, 135.18 )
 input_pickable = true
@@ -19,6 +19,7 @@ angular_damp = 1.0
 audio_bus_override = false
 audio_bus_name = "Master"
 script = ExtResource( 1 )
+_sections_unfolded = [ "Collision" ]
 __meta__ = {
 "_edit_group_": true
 }
@@ -34,8 +35,8 @@ _sections_unfolded = [ "Transform" ]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." index="1"]
 
-position = Vector2( 0.329817, 1.87371 )
-scale = Vector2( 4.14214, 6.1056 )
+position = Vector2( -0.0245568, -0.620456 )
+scale = Vector2( 3.19625, 4.77307 )
 shape = SubResource( 1 )
 
 [node name="Tween" type="Tween" parent="." index="2"]
