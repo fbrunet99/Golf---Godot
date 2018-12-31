@@ -11,6 +11,7 @@ The card faces are from SVG Cards (https://www.npmjs.com/package/svg-cards), ori
 Click a card that is one higher or lower than the face-up foundation card. Win by playing all the Tablea Cards.
 
  * Ace matches King or 2
+ * Game is over when the tableau or stock is empty
 
 ## Parts of the Screen
 ### New
@@ -31,7 +32,6 @@ This is the card that you are trying to match one higher or lower.
 ### Essential
 * Detect empty tableau (win)
 * Game over page (CanvasLayer)
-* Fix bug where remaining count isn't right or doesn't show last card
 
 ### Nice to have
 * Set background color to dark green (add ColorRect to playfield)

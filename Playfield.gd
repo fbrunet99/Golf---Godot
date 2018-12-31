@@ -159,12 +159,13 @@ func _on_Stock_card_clicked(value):
 	var cardNum	
 	_stock_remain -= 1
 	
-	if _stock_remain > 0:
+	if _stock_remain >= 0:
 		_cur_card += 1
 		var nextCard = _deck[_cur_card]
 		cardNum = nextCard.card_number
 		$Foundation.card_number = cardNum	
-	else:
+	
+	if _stock_remain <= 0:
 		_stock_remain = 0
 		cardNum = -1
 		$Stock.card_number = -1
