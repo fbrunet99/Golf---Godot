@@ -31,7 +31,7 @@ func setup_deck() :
 func start_game() :
 	cleanup_display()
 	_cur_card = 1
-	_stock_remain = 17
+	_stock_remain = 16
 	_tableau_remain = 35
 	
 	_deck = shuffleList(_deck)
@@ -156,19 +156,16 @@ func _on_Foundation_card_clicked(value):
 	pass 
 
 func _on_Stock_card_clicked(value):
-	
-	if _stock_remain <= 0:
-		return
-	
-	_cur_card += 1
+	var cardNum	
 	_stock_remain -= 1
-	var cardNum
 	
 	if _stock_remain > 0:
+		_cur_card += 1
 		var nextCard = _deck[_cur_card]
 		cardNum = nextCard.card_number
 		$Foundation.card_number = cardNum	
 	else:
+		_stock_remain = 0
 		cardNum = -1
 		$Stock.card_number = -1
 	

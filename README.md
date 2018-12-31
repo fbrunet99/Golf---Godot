@@ -1,6 +1,8 @@
 # Golf---Godot
 Golf Card Game in Godot
 
+![](assets/golf.png)
+
 This is a simple "Golf" Card Game written in Godot engine.
 
 The card faces are from SVG Cards (https://www.npmjs.com/package/svg-cards), originally created by David Bellot.
