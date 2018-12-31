@@ -31,12 +31,12 @@ This is the card that you are trying to match one higher or lower.
 ### Essential
 * Detect empty tableau (win)
 * Game over page (CanvasLayer)
-* Add custom font and use it to change the score size
 * Fix bug where remaining count isn't right or doesn't show last card
-* Set background color to dark green (add ColorRect to playfield)
 
 ### Nice to have
-* Undo
+* Set background color to dark green (add ColorRect to playfield)
+* Add Undo capability
+* Add custom font and use it to change the score size
 * Animate cards from stock to tableau on start
 * Animate card from stock to Foundation on click of stock
 * Add card flip sound
