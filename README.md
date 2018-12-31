@@ -1,7 +1,7 @@
 # Golf---Godot
 Golf Card Game in Godot
 
-![](assets/golf.png)
+![](assets/golf.PNG)
 
 This is a simple "Golf" Card Game written in Godot engine.
 
