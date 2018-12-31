@@ -29,6 +29,7 @@ func setup_deck() :
 
 # Start a new game
 func start_game() :
+	cleanup_display()
 	_cur_card = 1
 	_stock_remain = 17
 	_tableau_remain = 35
@@ -40,6 +41,14 @@ func start_game() :
 	$Stock.card_number = 0
 	_score -= 52
 	update_score()
+
+func cleanup_display():
+	var i
+	for i in range(0, _deck.size()):
+		var curCard = _deck[i]
+		remove_child(curCard)
+
+	print("cleaned up old cards")
 
 func update_score():
 	$StockRemaining.text = str(_stock_remain)
