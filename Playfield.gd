@@ -3,10 +3,12 @@ extends Node
 export (PackedScene) var Card
 
 var _deck = []
-var _tableau = [ 100, 200, 300, 400, 500, 600, 700 ]
+var _tableau = [ 150, 250, 350, 450, 550, 650, 750 ]
 var _cur_card = 0
 var _stock_remain
 var _tableau_remain
+var _vert_offset = 45
+var _score = 0
 
 func _ready():
 	randomize()
@@ -33,8 +35,15 @@ func start_game() :
 	
 	_deck = shuffleList(_deck)
 	draw_cards()
+
 	$Foundation.card_number = _deck[_cur_card].cardInfo.idx
 	$Stock.card_number = 0
+	_score -= 52
+	update_score()
+
+func update_score():
+	$StockRemaining.text = str(_stock_remain)
+	$Score.text = str(_score)
 
 func draw_cards() :
 	var i
@@ -45,7 +54,7 @@ func draw_cards() :
 	
 	for i in range(0, foundationSize ) :
 		if j > 6 :
-			y += 30
+			y += _vert_offset
 			j = 0
 
 		x = _tableau[j]
@@ -128,7 +137,9 @@ func _on_Tableau_card_removed(obj):
 	$Foundation.card_number = cardInfo.idx
 	
 	remove_child(obj)
-	print("on_Tableau_card_removed, stock remain = " + str(_stock_remain))
+	print("on_Tableau_card_removed, tableau remain = " + str(_tableau_remain))
+	_score += 5
+	update_score()
 
 func _on_Foundation_card_clicked(value):
 	print("on_Foundation_card_clicked value= " + str(value))
@@ -136,6 +147,10 @@ func _on_Foundation_card_clicked(value):
 	pass 
 
 func _on_Stock_card_clicked(value):
+	
+	if _stock_remain <= 0:
+		return
+	
 	_cur_card += 1
 	_stock_remain -= 1
 	var cardNum
@@ -148,5 +163,5 @@ func _on_Stock_card_clicked(value):
 		cardNum = -1
 		$Stock.card_number = -1
 	
-
+	update_score()
 	print("on_Stock_card_clicked value= " + str(value) + " remain=" + str(_stock_remain))

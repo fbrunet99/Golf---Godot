@@ -28,7 +28,8 @@ This is the card that you are trying to match one higher or lower.
 
 ### Essential
 * Detect empty tableau (win)
-* Game over page
-* Show score
-* Show remaining card count
-* Set background color to dark green
+* Game over page (CanvasLayer)
+* Add custom font and use it to change the score size
+* Fix bug where remaining count isn't right or doesn't show last card
+* Fix bug where extra cards appear after new game
+* Set background color to dark green (add ColorRect to playfield)
