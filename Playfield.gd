@@ -30,36 +30,39 @@ func setup_deck() :
 # Start a new game
 func start_game() :
 	cleanup_display()
-	_cur_card = 1
-	_stock_remain = 16
+	_cur_card = 0
+	_stock_remain = 17
 	_tableau_remain = 35
 	
 	_deck = shuffleList(_deck)
 	draw_cards()
 
-	$Foundation.card_number = _deck[_cur_card].cardInfo.idx
+	$Foundation.card_number = -1 #_deck[_cur_card].cardInfo.idx
 	$Stock.card_number = 0
 	_score -= 52
 	update_score()
 
+# Clean up the playfield for a new game
 func cleanup_display():
 	var i
 	for i in range(0, _deck.size()):
 		var curCard = _deck[i]
 		remove_child(curCard)
 
-	print("cleaned up old cards")
-
+# Draw the score on the screen
 func update_score():
 	$StockRemaining.text = str(_stock_remain)
 	$Score.text = str(_score)
 
+# Deal the cards onto the playfield
 func draw_cards() :
 	var i
 	var j = 0
 	var y = 130
 	var foundationSize = 35
 	var x
+	var nextCard
+	var loc
 	
 	for i in range(0, foundationSize ) :
 		if j > 6 :
@@ -69,8 +72,8 @@ func draw_cards() :
 		x = _tableau[j]
 		j += 1
 
-		var nextCard = _deck[i]
-		var loc = Vector2(x, y)
+		nextCard = _deck[i]
+		loc = Vector2(x, y)
 		nextCard.global_position = loc
 		nextCard.z_index = i
 		
@@ -78,7 +81,19 @@ func draw_cards() :
 		nextCard.connect("card_removed", self, "_on_Tableau_card_removed")
 		add_child(nextCard)
 
-	_cur_card = foundationSize
+	_cur_card = foundationSize -1
+	
+	loc = $Stock.global_position
+	loc = Vector2(loc.x - 1, loc.y)
+	for i in range(foundationSize, _deck.size()):
+		nextCard = _deck[i]
+		nextCard.global_position = loc
+		nextCard.cardInfo.pileType = "stock"
+		nextCard.z_index = _deck.size() - i
+		nextCard.connect("card_removed", self, "_on_Stock_card_removed")
+		add_child(nextCard)
+		#loc = Vector2(loc.x -1, loc.y)
+	
 	print("cur_card=" + str(_cur_card))
 
 	
@@ -87,6 +102,7 @@ func draw_cards() :
 #	# Update game logic here.
 #	pass
 
+# Start a new game
 func _on_NewGame_pressed():
 	start_game()
 	pass
@@ -102,7 +118,7 @@ func shuffleList(list):
 		list.remove(x)
 	return shuffledList
 
-
+# Check if the two values match for Golf Solitaire rules (1 higher or lower)
 func isMatch(value1, value2):
 	if ((value1 == 1 && value2 == 13) || (value1 == 13 && value2 == 1)):
 		return true
@@ -116,19 +132,26 @@ func isMatch(value1, value2):
 			ret = true
 	return ret
 	
+# Remove a card from the tableau
 func remove_card(cardInfo):
 	var obj = cardInfo.ref
-	var source = obj.global_position
 	var target = $Foundation.global_position
-	var tween = obj.get_child(2)
-	
-	tween.interpolate_property(obj, "position",
-                source, target, 0.2,
-                Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
-	tween.start()
+	tween_card(obj, target)
 
 #	remove_child(cardInfo.ref)
 
+# Animate the given card to the target position
+func tween_card(card, targetPos):
+	var source = card.global_position
+	card.z_index = 999
+	var tween = card.get_child(2)
+	tween.interpolate_property(card, "position",
+                source, targetPos, 0.2,
+                Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	tween.start()
+	
+	
+# Process a tableau card 
 func _on_Tableau_card_clicked(cardInfo):
 	var value = cardInfo.value
 
@@ -139,6 +162,7 @@ func _on_Tableau_card_clicked(cardInfo):
 	else:
 		print(str(value) + " and " + str(value2) + " don't match")
 	
+# Process the card after it has been animated
 func _on_Tableau_card_removed(obj):
 	var cardInfo = obj.cardInfo
 	
@@ -163,7 +187,7 @@ func _on_Stock_card_clicked(value):
 		_cur_card += 1
 		var nextCard = _deck[_cur_card]
 		cardNum = nextCard.card_number
-		$Foundation.card_number = cardNum	
+		tween_card(nextCard, $Foundation.global_position)
 	
 	if _stock_remain <= 0:
 		_stock_remain = 0
@@ -172,3 +196,9 @@ func _on_Stock_card_clicked(value):
 	
 	update_score()
 	print("on_Stock_card_clicked value= " + str(value) + " remain=" + str(_stock_remain))
+
+func _on_Stock_card_removed(obj):
+	var cardInfo = obj.cardInfo
+	print("on_Stock_card_removed " + str(cardInfo.value))	
+	$Foundation.card_number = obj.card_number	
+	obj.z_index = 0

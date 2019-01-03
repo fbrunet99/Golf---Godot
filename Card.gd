@@ -6,6 +6,12 @@ export (int) var card_number = 0 setget set_card_number, get_card_number
 export (String) var suit = "heart" setget get_suit
 export (int) var value setget get_value
 
+# need to figure out how to make this global so it can be set outside
+enum PILETYPE {
+	tableau,
+	stock,
+	waste
+}
 
 var _cardNames = [ "back", 
 "club_1", "club_2", "club_3", "club_4", "club_5", "club_6", "club_7", "club_8", "club_9", "club_10", "club_jack", "club_queen", "club_king",
@@ -21,6 +27,7 @@ var cardInfo =  {
 	idx = 0,
 	name ="",
 	value=0,
+	pileType = "tableau",
 	ref=self
 }
 
@@ -138,7 +145,10 @@ func _on_Card_input_event(viewport, event, shape_idx):
 				onTop = true
 				
 		
-		print("clicked card" + self.cardInfo.name + " suit=" + cardInfo.suit + " value=" + str(cardInfo.value))
+		print("clicked card" + self.cardInfo.name + 
+			" suit=" + cardInfo.suit + 
+			" value=" + str(cardInfo.value) +
+			" pile=" + str(cardInfo.pileType))
 		if onTop:
 			emit_signal("card_clicked", cardInfo)
 	return(self)

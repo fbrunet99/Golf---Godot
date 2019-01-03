@@ -3,7 +3,7 @@
 [ext_resource path="res://Playfield.gd" type="Script" id=1]
 [ext_resource path="res://Card.tscn" type="PackedScene" id=2]
 
-[node name="Playfield" type="Node" index="0"]
+[node name="Playfield" type="Node"]
 
 script = ExtResource( 1 )
 _sections_unfolded = [ "Pause" ]
@@ -37,10 +37,14 @@ align = 1
 [node name="Stock" parent="." index="1" instance=ExtResource( 2 )]
 
 position = Vector2( 413.097, 493.208 )
+z_index = 999
+_sections_unfolded = [ "Collision", "Z Index" ]
 
 [node name="Foundation" parent="." index="2" instance=ExtResource( 2 )]
 
 position = Vector2( 522.366, 493.208 )
+z_index = 999
+_sections_unfolded = [ "Collision", "Z Index" ]
 
 [node name="StockRemaining" type="Label" parent="." index="3"]
 
