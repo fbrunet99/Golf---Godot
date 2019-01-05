@@ -30,11 +30,8 @@ This is the card that you are trying to match one higher or lower.
 ## To Do
 
 ### Essential
-* Detect empty tableau (win)
-* Detect no more moves (lose)
 * Leave cards on screen all the time, don't replace with stock and foundation
 * Add Undo capability
-* Start stock waste
 
 ### Nice to have
 * Set background color to dark green (add ColorRect to playfield)
