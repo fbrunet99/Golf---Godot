@@ -31,12 +31,15 @@ This is the card that you are trying to match one higher or lower.
 
 ### Essential
 * Detect empty tableau (win)
-* Game over page (CanvasLayer)
+* Detect no more moves (lose)
+* Leave cards on screen all the time, don't replace with stock and foundation
+* Add Undo capability
+* Start stock waste
 
 ### Nice to have
 * Set background color to dark green (add ColorRect to playfield)
-* Add Undo capability
-* Add custom font and use it to change the score size
 * Animate cards from stock to tableau on start
-* Animate card from stock to Foundation on click of stock
 * Add card flip sound
+* Move counter
+* Timer
+* Find out about game# (specific randomization)

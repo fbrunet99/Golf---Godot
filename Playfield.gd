@@ -2,12 +2,13 @@ extends Node
 
 export (PackedScene) var Card
 
-var _deck = []
-var _tableau = [ 150, 250, 350, 450, 550, 650, 750 ]
-var _cur_card = 0
-var _stock_remain
+var _deck = []                                           # Entire deck
+var _tableau_pos = [ 150, 250, 350, 450, 550, 650, 750 ] # X coords of tableau columns
+var _vert_offset = 45                                    # Y coord of tableau
+var _tableau = []                                        # refernce to items on tableau
 var _tableau_remain
-var _vert_offset = 45
+var _cur_card = 0                                        #
+var _stock_remain                                        # Remaining items on stock
 var _score = 0
 
 func _ready():
@@ -28,7 +29,11 @@ func setup_deck() :
 
 
 # Start a new game
-func start_game() :
+func start_game():
+	var i
+	for i in range(_tableau.size(), 0):
+		_tableau.remove(i)
+		
 	cleanup_display()
 	_cur_card = 0
 	_stock_remain = 17
@@ -48,6 +53,8 @@ func cleanup_display():
 	for i in range(0, _deck.size()):
 		var curCard = _deck[i]
 		remove_child(curCard)
+		
+	$HUD.hide_message()
 
 # Draw the score on the screen
 func update_score():
@@ -69,7 +76,7 @@ func draw_cards() :
 			y += _vert_offset
 			j = 0
 
-		x = _tableau[j]
+		x = _tableau_pos[j]
 		j += 1
 
 		nextCard = _deck[i]
@@ -79,6 +86,7 @@ func draw_cards() :
 		
 		nextCard.connect("card_clicked", self, "_on_Tableau_card_clicked")
 		nextCard.connect("card_removed", self, "_on_Tableau_card_removed")
+		_tableau.append(nextCard)
 		add_child(nextCard)
 
 	_cur_card = foundationSize -1
@@ -119,7 +127,7 @@ func shuffleList(list):
 	return shuffledList
 
 # Check if the two values match for Golf Solitaire rules (1 higher or lower)
-func isMatch(value1, value2):
+func is_match(value1, value2):
 	if ((value1 == 1 && value2 == 13) || (value1 == 13 && value2 == 1)):
 		return true
 	
@@ -156,7 +164,7 @@ func _on_Tableau_card_clicked(cardInfo):
 	var value = cardInfo.value
 
 	var value2 = $Foundation.cardInfo.value
-	if isMatch(value, value2):
+	if is_match(value, value2):
 		print(str(value) + " and " + str(value2) + " match")
 		remove_card(cardInfo)
 	else:
@@ -169,10 +177,13 @@ func _on_Tableau_card_removed(obj):
 	_tableau_remain -= 1
 	$Foundation.card_number = cardInfo.idx
 	
-	remove_child(obj)
+#	remove_child(obj)
+	obj.z_index = 0
+	_tableau.erase(obj)
 	print("on_Tableau_card_removed, tableau remain = " + str(_tableau_remain))
 	_score += 5
 	update_score()
+	detect_end()
 
 func _on_Foundation_card_clicked(value):
 	print("on_Foundation_card_clicked value= " + str(value))
@@ -195,10 +206,54 @@ func _on_Stock_card_clicked(value):
 		$Stock.card_number = -1
 	
 	update_score()
-	print("on_Stock_card_clicked value= " + str(value) + " remain=" + str(_stock_remain))
+	print("on_Stock_card_clicked "  + 
+		" stock remain=" + str(_stock_remain) +
+		" tableau remain=" + str(_tableau_remain))
 
 func _on_Stock_card_removed(obj):
 	var cardInfo = obj.cardInfo
 	print("on_Stock_card_removed " + str(cardInfo.value))	
 	$Foundation.card_number = obj.card_number	
 	obj.z_index = 0
+	
+	detect_end()
+	
+
+func detect_end():
+	
+	if _tableau_remain == 0:
+		$HUD.show_message("You Win!")
+		return
+
+	if _stock_remain <= 0:
+		if !any_moves():
+			game_over()
+
+func any_moves():
+	var cards = get_selectable_cards()
+	var i
+	var cardValue
+	var foundationValue = $Foundation.cardInfo.value
+	
+	for i in range(0, cards.size()):
+		cardValue = cards[i].cardInfo.value
+		if is_match(foundationValue, cardValue):
+			return true
+			
+	return false
+	
+
+func get_selectable_cards():
+	var cards = []
+	var i
+	var card
+	for i in range(0, _tableau.size()):
+		card = _tableau[i]
+		if card.is_on_top():
+			cards.append(card)
+		
+	return cards
+	
+
+func game_over():
+	$HUD.show_message("Game Over")
