@@ -52,6 +52,9 @@ func cleanup_display():
 	var i
 	for i in range(0, _deck.size()):
 		var curCard = _deck[i]
+		curCard.disconnect("card_clicked", self, "_on_Tableau_card_clicked")
+		curCard.disconnect("card_removed", self, "_on_Tableau_card_removed")
+		curCard.disconnect("card_removed", self, "_on_Stock_card_removed")
 		remove_child(curCard)
 		
 	$HUD.hide_message()
